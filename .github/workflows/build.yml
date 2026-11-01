@@ -16,6 +16,7 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
+          export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false"
           yes | buildozer -v android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
