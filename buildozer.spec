@@ -1,4 +1,5 @@
 [app]
+p4a.pip_options = --prefer-binary
 title = SuCore
 package.name = sucore
 package.domain = org.lanyin
@@ -12,3 +13,4 @@ android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, INTERNET, W
 android.api = 33
 android.minapi = 26
 android.archs = arm64-v8a
+p4a.clean_build = True
