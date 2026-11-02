@@ -4,7 +4,6 @@ workflows:
     instance_type: linux
     max_build_duration: 60
     environment:
-      python: 3.10
       java: 17
       vars:
         PACKAGE_NAME: "com.lanyin.sucore"
@@ -24,7 +23,7 @@ workflows:
           sudo mkswap /swapfile
           sudo swapon /swapfile
           
-          # 限制 Gradle 内存
+          # 限制 Gradle 内存，避免 Java heap space 错误
           export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false"
           
           # 开始打包
