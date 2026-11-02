@@ -7,25 +7,26 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
+          # 安装 Mac 上必需的底层编译工具
           brew install autoconf automake libtool pkg-config lld
           
       - name: Build with Buildozer
         script: |
-          # 1. 创建纯净虚拟环境，隔离系统 Python
+          # 使用虚拟环境隔离，不管机器自带什么版本都不影响
           python3 -m venv venv
           source venv/bin/activate
           pip install buildozer cython
           
           export PATH=$PATH:~/.local/bin
           
-          # 2. 终极防爆：强制每次只编译 1 个文件，绝不爆内存
+          # 强行限制并发数为 1，彻底防爆内存
           export MAKEFLAGS="-j1"
           export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx1024m -Dorg.gradle.daemon=false"
           
-          # 3. 清理以前失败的残骸，防止带病编译
+          # 清理以前的构建残骸
           rm -rf .buildozer
           
-          # 4. 开始打包（去掉 -v，减少日志输出，防止网页卡死）
+          # 开始打包
           yes | buildozer android debug
     artifacts:
       - bin/*.apk
