@@ -10,11 +10,18 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Create Swap space for build
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          
+      - name: Create Swap space
         run: |
           sudo swapoff -a || true
           sudo rm -f /swapfile || true
-          sudo fallocate -l 10G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=10240
+          sudo fallocate -l 8G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=8192
           sudo chmod 600 /swapfile
           sudo mkswap /swapfile
           sudo swapon /swapfile
@@ -27,9 +34,12 @@ jobs:
           pip install --user buildozer cython
           
       - name: Build with Buildozer
+        env:
+          # 强制限制编译并发，单线程跑，防止内存和空间双爆
+          P4A_ARGS: "--no-compile-pyo --no-byte-compile-python"
         run: |
           export PATH=$PATH:~/.local/bin
-          export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false"
+          export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx1536m -Dorg.gradle.daemon=false"
           yes | buildozer -v android debug
           
       - name: Upload APK
