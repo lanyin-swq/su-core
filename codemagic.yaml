@@ -1,0 +1,33 @@
+workflows:
+  android-workflow:
+    name: Build Kivy APK
+    instance_type: linux
+    max_build_duration: 60
+    environment:
+      python: 3.10
+      java: 17
+      vars:
+        PACKAGE_NAME: "com.lanyin.sucore"
+    scripts:
+      - name: Install dependencies
+        script: |
+          sudo apt-get update
+          sudo apt-get install -y python3-dev autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev build-essential
+          pip3 install --user buildozer cython
+          
+      - name: Build with Buildozer
+        script: |
+          export PATH=$PATH:~/.local/bin
+          # 强行分配 8G Swap 虚拟内存，防止编译爆内存
+          sudo fallocate -l 8G /swapfile || true
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          
+          # 限制 Gradle 内存
+          export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false"
+          
+          # 开始打包
+          yes | buildozer -v android debug
+    artifacts:
+      - bin/*.apk
