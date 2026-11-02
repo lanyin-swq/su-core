@@ -16,14 +16,10 @@ workflows:
           pip install buildozer cython
           
           export PATH=$PATH:~/.local/bin
-          
-          # 极限单线程防爆
           export MAKEFLAGS="-j1"
           export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx1024m -Dorg.gradle.daemon=false"
           
-          # 强行指定 NDK 路径（默认下载路径）
-          export ANDROIDNDK="$HOME/.buildozer/android/platform/android-ndk-r25b"
-          
+          # 删掉了强行指定 NDK 路径的代码，让 buildozer 自己去配
           rm -rf .buildozer
           yes | buildozer android debug
     artifacts:
