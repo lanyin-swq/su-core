@@ -1,7 +1,7 @@
 workflows:
   android-workflow:
     name: Build Kivy APK
-    instance_type: linux
+    instance_type: linux_x2
     max_build_duration: 60
     environment:
       java: 17
