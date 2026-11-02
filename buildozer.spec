@@ -6,7 +6,7 @@ package.domain = org.lanyin
 source.dir = .
 source.include_exts = py,db
 version = 0.1
-requirements = python3==3.10.10,kivy
+requirements = python3==3.10.10,hostpython3==3.10.10,kivy
 orientation = portrait
 fullscreen = 1
 android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, INTERNET, WAKE_LOCK
