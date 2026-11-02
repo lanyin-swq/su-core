@@ -7,7 +7,7 @@ source.include_exts = py,db
 version = 0.1
 
 # 核心修复：不写任何版本号，让系统自己匹配
-requirements = python3,kivy,requests
+requirements = python3==3.10.10,kivy,requests
 
 orientation = portrait
 fullscreen = 1
