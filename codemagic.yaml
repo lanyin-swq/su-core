@@ -13,7 +13,7 @@ workflows:
         script: |
           python3 -m venv venv
           source venv/bin/activate
-          pip install buildozer cython
+          pip install buildozer cython && pip install llama-cpp-python --prefer-binary
           
           export PATH=$PATH:~/.local/bin
           export MAKEFLAGS="-j1"
