@@ -7,18 +7,18 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
-          brew install autoconf automake libtool pkg-config
-          # 补上刚才警告缺失的 lld 链接器
-          brew install lld || true
+          brew install autoconf automake libtool pkg-config lld
           pip3 install --user buildozer cython
           
-      - name: Build with Buildozer
+      - name: Clean and Build with Buildozer
         script: |
           export PATH=$PATH:~/.local/bin
-          # 限制 Gradle 内存
           export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false"
           
-          # 开始打包（去掉了 -v，减少日志刷屏）
-          yes | buildozer android debug
+          # 清理缓存，这是解决该问题的关键步骤
+          buildozer clean
+          
+          # 使用 --force 参数强制重新编译
+          yes | buildozer android debug --force
     artifacts:
       - bin/*.apk
