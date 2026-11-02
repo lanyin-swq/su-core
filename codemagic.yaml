@@ -13,17 +13,23 @@ workflows:
         script: |
           python3 -m venv venv
           source venv/bin/activate
-          pip install buildozer cython scikit-build-core cmake
+          
+          # 安装打包工具，全部走清华源
+          pip install buildozer cython -i https://pypi.tuna.tsinghua.edu.cn/simple
           
           export PATH=$PATH:~/.local/bin
+          
+          # 强制单线程，防止内存爆炸
           export MAKEFLAGS="-j1"
           export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx1024m -Dorg.gradle.daemon=false"
           
+          # 强行告诉 C++ 编译器去哪里找 Android NDK（针对 Mac 机器路径）
+          export CC="$HOME/.buildozer/android/platform/android-ndk-r25b/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang"
+          export CXX="$HOME/.buildozer/android/platform/android-ndk-r25b/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+          
           rm -rf .buildozer
           
-          # --prefer-binary 会强制优先下载官方预编译好的 Wheel 包，避免漫长的源码编译
-          pip install --prefer-binary llama-cpp-python
-          
+          # 开始打包
           yes | buildozer android debug
     artifacts:
       - bin/*.apk
